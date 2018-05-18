@@ -1,0 +1,110 @@
+{% extends "doc_base.html" %}
+{% load seahub_tags avatar_tags group_avatar_tags office_extras%}
+{% block commit_list %}
+    {% if valid_commits %}
+    <div id="commits" class="square panel">
+        <ul class="media-list">
+            {% for c in valid_commits %}
+                <li class="comment-item onhover">
+                    <div class="media-left">{% avatar c.uid 64 %}</div>
+                    <div class="media-body width-full">
+                        <ul class="list-inline">
+                            <li><strong>{{ c.uid|email2nickname }}</strong></li>
+                            {#<li class="item-meta"><span>{{ c.created|date:"Y-m-d G:i" }}</span></li>#}
+                            <li class="item-meta"><span>{{ c.created|translate_seahub_time }}</span></li>
+                            {% if c.uid == user.username %}
+                                <li class="pull-right item-meta">
+                                    <ul class="list-inline">
+                                        <li class="pull-right"><span>...</span></li>
+                                        <li class="pull-right">
+                                            <div class="hoveron pointer btn2edit" data-id="{{ c.id|antispider }}">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                                <span>编辑</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        </ul>
+                        <div class="post-body">
+                            {{ c.content|linebreaksbr|seahub_urlize|mention}}
+                        </div>
+                        {% if c.modified != c.created%}
+                            <div class="item-meta text-right">
+                                修改于{{ c.modified|translate_seahub_time }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        {% if invalid_commits%}
+            <li class="comment-item">
+                <div id="toggleclick" class="pointer">一些废弃的回复</div>
+                <dl id="invalidcomment" style="display:none;">
+                    {% for c in invalid_commits %}
+                        <dt>{{ c.uid|email2nickname }} {{ c.created|translate_seahub_time }}</dt>
+                        <dd>{{ c.content }}</dd>
+                    {% endfor %}
+                </dl>
+            </li>
+        {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+{% endblock commit_list %}
+{% block commit_form %}
+    {% if need_commit %}
+        <div id="post_form" class="square opacity" >
+            <strong>{{ user.nickname }}, 请回复： </strong>
+            <div contenteditable="true" id="inputor" class="editable-inputor at-inputor"></div>
+            {% url 'office_commit' doc.id|antispider as cu%}
+            <form method="post" action="{{ cu }}" onsubmit="return copyContent(this)">
+                {% csrf_token %}
+                <p class="hide">
+                    <label for="commit">{{ user.username }}:</label>
+                    <textarea name="commit" id="commit"></textarea>
+                </p>
+                <input type="submit" value="提交" class="btn btn-success btn-full">
+            </form>
+        </div>
+    {% endif %}
+{% endblock commit_form %}
+{% block footer %}
+    {{ block.super }}
+    <div id="editor-control">
+        <div class="grippie"></div>
+        <p class="toggler pointer"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 关闭</p>
+        <div class="contents">
+            <p>修改:</p>
+            <div class="textarea-wrapper">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <label for="update-commit"></label>
+                    <textarea name="commit" id="update-commit" class="at-inputor"></textarea>
+                    <input type="submit" value="修改" class="btn btn-success btn-full">
+                </form>
+            </div>
+        </div>
+{#        <div class="contents">#}
+{#            <p>修改:</p>#}
+{#            <div class="textarea-wrapper">#}
+{#                <div contenteditable="true" id='editor' class="editable-inputor"></div>#}
+{#                <form method="post" action="" onsubmit="return copyContent(this)">#}
+{#                    {% csrf_token %}#}
+{#                    <p class="hide">#}
+{#                        <label for="update-commit">commit:</label>#}
+{#                        <textarea name="commit" id="update-commit"></textarea>#}
+{#                    </p>#}
+{#                    <input type="submit" value="提交" class="btn btn-success btn-full">#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+    </div>
+{% endblock footer %}
+{% block foot_script %}{{ block.super }}
+    <script type="text/javascript">
+    $('#toggleclick').click(function () {
+        $('#invalidcomment').toggle();
+    })
+    </script>
+{% endblock %}

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# below for crontab
+# 3 22 * * * /home/your/seafile/seafile-OA/clean_blockhole.sh >> /tmp/clean_blockhole 2>&1
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+seahub=/home/your/seafile/seafile-server-latest/seahub
+. ${seahub}/setenv.sh
+python ${seahub}/manage.py clean_blockhole

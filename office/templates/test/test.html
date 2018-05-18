@@ -1,0 +1,79 @@
+{% extends "office_base.html" %}
+{% load staticfiles %}
+{% block content %}
+    I'm <h1>OTHER</h1>{{ site_title|upper }}
+{#    {% block mm %}#}
+{#        <p>MM</p>#}
+{#    {% endblock mm %}#}
+{#    {% if d.name == user.username %}#}
+{#        <p>!{{ d.name }}!</p>#}
+{#    {% else %}#}
+{#        <p>{{ auth }}</p>#}
+{#    {% endif %}#}
+{#    <pre>#}
+    {#<p>messages {{ messages }}</p>#}
+    {#<p>perms {{ perms }}</p>#}
+    {#{{ request }}#}
+    {#{{ MEDIA_URL }}#}
+    {#<code>{{ LANGUAGES }}</code>#}
+    {#{% debug %}#}
+    {{ request.META.REMOTE_ADDR }}
+        {{ auth }}REDIRECT_FIELD_NAME[{{ REDIRECT_FIELD_NAME }}]
+    {{ data|default:"&lt;script&rt;alert('dede')&lt;/script&rt;" }}
+    </pre>
+    {# {% include "include.html" %} #}
+    <p>
+        {% for o in list %}
+            <tr class="{% cycle 'row1' 'row2' 'row3' as cycrow %}">
+                <th class="{% cycle cycrow %}"><td>dd</td></th>
+                <th class="{{ cycrow }}"><td class="{{ cycrow }}" >tt</td></th>
+            </tr>
+        {% endfor %}
+    </p>
+    <a href="{% url 'office.views.home' %}?next={% url 'office.views.test' %}">{% url 'office.views.home' %}?next={% url 'office.views.test' %}</a>
+    <form action="">{% csrf_token %}
+        <input id="fileupload" type="file" name="file" data-url="server/php/" multiple="true">
+    </form>
+    <!--script type="text/template" id="upload-file-dialog-template"-->
+    <div id="upload-file-dialog" class="hide">
+        <h3 class="hd"><span class="status">文件上传</span> <span class="total-progress hide"></span></h3>
+        <div class="ops">
+            <img src="/media/img/minus.png" alt="" class="fold-switch cspt" />
+            <img src="/media/img/close.png" alt="close" title="关闭" class="close cspt hide" />
+        </div>
+        <div class="con">
+            <div class="row fileupload-buttonbar">
+                <button type="button" class="cancel cspt fright">取消全部</button>
+            </div>
+            <p class="saving-tip alc clear hide"><img src="/media/img/loading-icon.gif" alt="" style="margin-right:5px;" class="vam" />保存中...</p>
+            <table class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+        </div>
+    </div>
+    <!--/script-->
+    <div id="progress" >
+        <div class="bar" style="width: 0%;"></div>
+    </div>
+    <textarea name="textarea" id="inputor" cols="100" rows="10"></textarea>
+    <div contenteditable="true" id="editor">
+        <p>pp <span>span</span> pp</p>
+        <p>
+            ok
+        </p>
+    </div>
+    <form action="" method="POST">
+        {{ CommitForm }}
+{#        <table>{{ CommitForm.as_table }}</table>#}
+{#        <div>{{ CommitForm.as_p }}</div>#}
+{#        <ul>{{ CommitForm.as_ul }}</ul>#}
+    </form>
+{% endblock content %}
+{% block foot_script %}
+{#<script src="{% static 'scripts/lib/jquery.ui.widget.1.11.3.js' %}"></script>#}
+{#<script src="{% static 'scripts/lib/jquery.iframe-transport.1.4.js' %}"></script>#}
+{#<script src="{% static 'scripts/lib/jquery.fileupload.5.42.1.js' %}"></script>#}
+    <link href="{% static 'oa/atwho/jquery.atwho.css'%}" rel="stylesheet">
+    <script src="{% static 'oa/atwho/jquery.caret.js' %}"></script>
+    <script src="{% static 'oa/atwho/jquery.atwho.js' %}"></script>
+    <script src="{% static 'oa/test.js' %}"></script>
+    <script data-main="{% static "oa/require_test" %}" src="{% static "scripts/lib/require.js" %}"></script>
+{% endblock foot_script %}

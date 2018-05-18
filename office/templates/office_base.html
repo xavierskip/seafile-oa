@@ -1,0 +1,167 @@
+{#{% spaceless %}#}
+{% load staticfiles %}
+{% load seahub_tags avatar_tags office_extras%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <link rel="icon" type="image/x-icon" href="/media/img/favicon.png"/>
+    <title>{% block title %}{{ title }}{% endblock title %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static "oa/bootstrap/css/bootstrap.min.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "oa/css/base.css" %}" />
+    {% block head_style %}{% endblock head_style%}
+    <script type="text/javascript" src="{% static "oa/js/jquery.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "oa/bootstrap/js/bootstrap.min.js" %}"></script>
+    {% block head_script %}{% endblock head_script%}
+    {% block head_extra %}{% endblock head_extra%}
+</head>
+<body class="my-background">
+{% block navbar %}
+    <nav class="my-navbar navbar navbar-default navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                    <i class="icon-bar"></i><i class="icon-bar"></i><i class="icon-bar"></i>
+                </button>
+                {# todo             <img src="" alt="Brand">#}
+                <a href="{% url 'officeHome' %}" class="navbar-brand">Office</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav ">
+                {% if user.is_officer %}
+                    <li class="dropdown {% ifequal banner '分发文件' %}active{% endifequal %}">
+                        <a href="#" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <span class="glyphicon glyphicon-send" aria-hidden="true"></span> 分发文件<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="{% url 'distribution' %}">未分发文件 {% distribute_count as dc %}
+                                    {% if dc != 0 %}<span class="badge badge-unread pull-right">{{ dc }}</span>{% endif %}
+                                </a>
+                            </li>
+                            <li><a href="{% url 'distributed' %}">已分发文件</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if not user.is_anonymous %}
+                    <li class="{% ifequal banner '我的文件' %}active{% endifequal %} dropdown">
+                        <a href="#" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> 我的文件<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="{% url 'office_todo' %}">未完成文件 {% todo_count as tc %}
+                                    {% if tc != 0 %}<span class="badge badge-unread pull-right">{{ tc }}</span>{% endif %}
+                                </a>
+                            </li>
+                            <li><a href="{% url 'office_done' %}">已完成文件</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                <li class="{% ifequal banner '文件历史' %}active{% endifequal %}">
+                    <a href="{% url 'officeHistory' %}"><span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> 文件历史</a>
+                </li>
+                <li class="{% ifequal banner '检索文件' %}active{% endifequal %}">
+                    <a href="{% url 'office_search' %}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> 检索文件</a>
+                </li>
+{#                <li>#}
+{#                    <form class="navbar-form" role="search">#}
+{#                        <div class="form-group">#}
+{#                            <input type="text" class="form-control" placeholder="Search">#}
+{#                        </div>#}
+{#                        <button type="submit" class="btn btn-default">搜索</button>#}
+{#                    </form>#}
+{#                </li>#}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    {% if user.is_officer %}
+                        <li><a href="{% url "admin:index" %}"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 登记台</a></li>
+                    {% endif %}
+                    <li class="dropdown ">
+                        <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" style="padding: 7px 15px;">{% avatar user.username 36 %}<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{% url 'user_profile' user.username %}" > 你好，{{ request.user.email|email2nickname }}</a></li>
+                            <li><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 首页</a></li>
+                            <li><a href="{% url 'auth_logout' %}"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> 退出</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'auth_login' %}?{{ REDIRECT_FIELD_NAME }}={{ request.path_info }}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 请登录</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    </nav>
+{% endblock navbar %}
+<div id="content" class="container">
+    {% block content %}
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="panel-padding">
+                    <h3 class="panel-title my-panel-title {% block sign-css %}{% endblock %}">{% block panel %}我的文件{% endblock panel %}</h3>
+                </div>
+                <div class="panel-padding">
+                    {% if document_page %}
+                        <div class="my-list-group list-group">
+                            {% for doc in document_page %}
+                                <a href="{% url 'office.views.document_page' doc.id|antispider %}" class="list-group-item">
+                                    <div class="row col-title">
+                                        <div class="col-xs-9 col-sm-9 col-md-10"><span>{{ doc.title }}</span></div>
+                                        <div class="col-xs-3 col-sm-3 col-md-2 text-right lighter">{{ doc.registered|date:"Y-m-d" }}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-9 col-sm-9 col-md-10">
+                                            <span class="label label-primary">{{ doc.issue }}</span>
+                                            {% if doc.reference %}<span>{{ doc.reference }}</span>{% endif %}
+                                        </div>
+                                        <div class="col-xs-3 col-sm-3 col-md-2 text-right">
+                                            {% if doc.attachment_set.count %}
+                                                {{ doc.attachment_set.count }}个<span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+                                            {% endif %}
+                                            {% if doc.commit_progress %}
+                                                <span class="badge">进度:{{ doc.commit_progress }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                        {% block paginator %}
+                            <nav>
+                                <ul class="pager">
+                                    {% if document_page.has_previous %}
+                                        <li class="previous"><a href="?page={{ document_page.previous_page_number }}">&#60;&#60; 上一页</a></li>
+                                    {% endif %}
+                                    <li>{{ document_page.number }}/{{ document_page.paginator.num_pages }}</li>
+                                    {% if document_page.has_next %}
+                                        <li class="next"><a href="?page={{ document_page.next_page_number }}">下一页 &#62;&#62;</a></li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endblock paginator %}
+                    {% else %}
+                        <p style="padding:7px" class="my-list-group">没有未完成文件</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endblock content %}
+</div>
+{%  block footer %}
+<div id="footer">
+    <div class="navbar navbar-fixed-bottom">
+        <div class="container">
+            <p class="text-right">MADE BY YOUR</p>
+            <p class="text-right">Do have faith in what you're doing.</p>
+        </div>
+    </div>
+</div>
+{% endblock footer %}
+{% block foot_script %}{% endblock foot_script %}
+</body>
+</html>
+{#{% endspaceless %}#}

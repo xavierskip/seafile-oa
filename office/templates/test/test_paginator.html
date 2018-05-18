@@ -1,0 +1,34 @@
+{% extends "office_base.html" %}
+{% block content %}
+<div>
+{% for item in items.object_list %}
+  <p><span>{{ item.doc }}</span>:<span>{{ item.file_path }}</span><span>{{ item.created }}</span></p>
+{% endfor %}
+</div>
+
+<!-- 第一种分页显示方式 -->
+<p>
+  {# items.paginator.page_range 这个函数返回包含一个所有页码数的 range 对象 #}
+  {# 即 range(1, items.paginator.num_pages + 1) #}
+  {% for page_number in items.paginator.page_range %}
+    {% ifequal page_number  items.number %}
+      {{ page_number }}
+    {% else %}
+      <a href="?page={{ page_number }}">{{ page_number }}</a>
+    {% endifequal %}
+  {% endfor %}
+</p>
+
+
+<!-- 另一种分页显示方式 -->
+<p>
+{% if items.has_previous %}
+  <a href="?page={{ items.previous_page_number }}">Previous</a>
+  {% endif %}
+  {# items.paginator.number_pages 返回总页数 #}
+  Page {{ items.number }} of {{ items.paginator.num_pages }}.
+{% if items.has_next %}
+  <a href="?page={{ items.next_page_number }}">Next</a>
+{% endif %}
+</p>
+{% endblock content %}

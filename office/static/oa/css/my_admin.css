@@ -1,0 +1,7 @@
+.hide {
+    display: none;
+}
+
+.progress-bar {
+    width: 0; height: 2px; background-color: #2ECC40
+}

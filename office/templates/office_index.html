@@ -1,0 +1,5 @@
+{% extends "office_base.html" %}
+{% load seahub_tags avatar_tags %}
+{% block title %}{{ username|email2nickname }}的文件{% endblock title %}
+{% block panel %}{% avatar username 24 %} {{ username|email2nickname }}的文件{% endblock panel %}
+{% block sign-css %}{% endblock %}

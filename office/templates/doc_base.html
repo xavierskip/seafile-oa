@@ -1,0 +1,150 @@
+{% extends "office_base.html" %}
+{% load staticfiles %}
+{% load seahub_tags office_extras%}
+{% block title %}文件:{{doc.title}}{% endblock title %}
+{% block head_style %}
+    <link href="{% static 'oa/atwho/jquery.atwho.css'%}" rel="stylesheet">
+{% endblock head_style%}
+{% block head_extra %}
+    <script src="{% static 'oa/atwho/jquery.caret.js' %}"></script>
+    <script src="{% static 'oa/atwho/jquery.atwho.js' %}"></script>
+{% endblock head_extra %}
+{% block content %}
+    <div class="panel panel-default panel-padding container-fluids" style="margin-bottom: 10px;">
+        <div class="panel-heading">
+            <p class="panel-title clickselect">{{ doc }}</p>
+        </div>
+        <div class="panel-body">
+            <a href="{% url 'print_form' doc.id|antispider %}" target="_blank">生成报告单</a>
+            / <a href="{% url 'view_common_lib_dir' doc.repo_id doc.folder %}" target="_blank">打开文件目录</a>
+            {% if user.is_officer %}
+            / <a href="{% url 'admin:office_document_change' doc.id %}" target="_blank">打开管理页面 {{ doc.id }}</a>
+            {% endif %}
+        </div>
+        <table class="table table-bordered">
+            <thead><tr></tr></thead>
+            <tbody>
+            <tr>
+                <td class="fieldset">
+                    <dl>
+                        <dt>文号:</dt>
+                        <dd class="clickselect"><strong>{{ doc.reference|default:'-' }}</strong></dd>
+                    </dl>
+                </td>
+                <td class="fieldset">
+                    <dl>
+                        <dt>成文时间:</dt>
+                        <dd>{{ doc.generated|date:"Y年m月d日" }}</dd>
+                    </dl>
+                </td>
+                <td class="fieldset">
+                    <dl><dt>登记时间:</dt><dd>{{ doc.registered|date:"Y年m月d日" }}</dd></dl>
+                </td>
+            </tr>
+            <tr>
+                <td class="fieldset" colspan="3">
+                    <dl>
+                        <dt>文题:</dt>
+                        <dd class="clickselect"><strong>{{ doc.title }}</strong></dd>
+                    </dl>
+                </td>
+            </tr>
+            <tr>
+                <td class="fieldset" colspan="3">
+                    <dl>
+                        <dt>发文单位:</dt>
+                        <dd class="clickselect"><strong>{{ doc.issue }}</strong></dd>
+                    </dl>
+                </td>
+            </tr>
+            {% if doc.note %}
+                <tr>
+                    <td class="fieldset" colspan="3">
+                        <dl>
+                            <dt>备注:</dt>
+                            <dd>{{ doc.note }}</dd>
+                        </dl>
+                    </td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td class="fieldset" colspan="3">
+                    <dl>
+                        <dt>文件:</dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                {% for f in doc.attachment_set.all %}
+                                    <li>
+                                        <img src="{{ MEDIA_URL }}img/file/{{ f.file|file_icon_filter }}" alt="" />
+                                        <a href="{% if user.is_anonymous %}{{ f.get_absolute_url|anonymousview }}{% else %}
+                                        {{ f.get_absolute_url }}
+                                        {% endif %}" target="_blank">{{ f.file }}</a>
+                                    </li>
+                                    {% empty %}
+                                    <li><p>还未上传文件</p></li>
+                                {% endfor %}
+                            </ul>
+                        </dd>
+                    </dl>
+                </td>
+            </tr>
+            <tr>
+                <td class="fieldset" colspan="3">
+                    <dl>
+                        <dt>分配:</dt>
+                        <dd>
+                            {% for m in doc.member_set.all %}
+                                <a class="label {% if m.commit %}label-success{% else %}label-default{% endif %}"
+                                   href="{% url 'user_index' m.uid %}">{{ m.uid|email2nickname }}</a>
+                            {% empty %}
+                                <span>未分配</span>
+                            {% endfor %}
+                        </dd>
+                    </dl>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="panel-footer">
+            <nav>
+                <ul class="pager">
+                    {% if  pre_id != none %}
+                        <li class="previous"><a href="{% url 'office_page' pre_id|antispider %}">前一个</a></li>
+                    {% endif %}
+                    {% if  next_id != none %}
+                        <li class="next"><a href="{% url 'office_page' next_id|antispider %}">后一个</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% block commit_list %}{% endblock commit_list %}
+    {% block commit_form %}{% endblock commit_form %}
+{% endblock content %}
+{% block foot_script %}
+    <script type="text/javascript" src="{% static "oa/js/forms.js" %}"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(document).keydown(function(e) {
+                var url = false;
+                //console.log(e);
+                if (e.which == 188 && e.altKey) {  // alt + <  to previous
+                    {% if  pre_id != none %}url = "{% url 'office_page' pre_id|antispider %}";{% endif %}
+                }
+                else if (e.which == 190 && e.altKey) {  // alt + > to next
+                    {% if  next_id != none %}url = "{% url 'office_page' next_id|antispider %}";{% endif %}
+                }
+                if (url) {
+                    window.location = url;
+                }
+            });
+        });
+        $('.clickselect').click(function (e) {
+            var sel = window.getSelection();
+            var range = document.createRange();
+            range.selectNode(this);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        });
+    </script>
+{% endblock foot_script %}

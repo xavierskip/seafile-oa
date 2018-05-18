@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# seafile-server-laster/seahub.sh prepare_env()
+default_ccnet_conf_dir=/home/your/seafile/ccnet
+seafile_data_dir=/home/your/seafile/seafile-data
+central_config_dir=/home/your/seafile/conf
+INSTALLPATH=/home/your/seafile/seafile-server-latest
+
+
+export CCNET_CONF_DIR=${default_ccnet_conf_dir}
+export SEAFILE_CONF_DIR=${seafile_data_dir}
+export SEAFILE_CENTRAL_CONF_DIR=${central_config_dir}
+export PYTHONPATH=${INSTALLPATH}/seafile/lib/python2.6/site-packages:${INSTALLPATH}/seafile/lib64/python2.6/site-packages:${INSTALLPATH}/seahub:${INSTALLPATH}/seahub/thirdpart:$PYTHONPATH
+export PYTHONPATH=${INSTALLPATH}/seafile/lib/python2.7/site-packages:${INSTALLPATH}/seafile/lib64/python2.7/site-packages:$PYTHONPATH

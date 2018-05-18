@@ -1,0 +1,118 @@
+{% extends "office_base.html" %}
+{% load staticfiles %}
+{% block title %}检索文件{% endblock title %}
+{% block head_style %}
+    {% if not chrome %}
+        <link rel="stylesheet" type="text/css" href="{% static "admin/css/base.css" %}" />
+        <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+    {% endif %}
+{% endblock head_style%}
+{% block head_extra %}{{ block.super }}
+    {% if not chrome %}
+        <script src="/oa/admin/jsi18n/"></script>
+        <script src="{% static 'admin/js/core.js' %}"></script>
+        <script src="{% static 'admin/js/jquery.init.both.js' %}"></script>
+        <script src="{% static 'admin/js/calendar.js' %}"></script>
+        <script src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}"></script>
+        <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
+        <style>
+            li {font-size: 14px;}
+            ul li {
+                list-style-type: none;
+                padding: 0;
+            }
+        </style>
+    {% endif %}
+{% endblock head_extra%}
+{% block content %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">检索文件</h3>
+        </div>
+        <div class="panel-body">
+            <form  class="form-horizontal" role="form" method="post" id="office-search">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="reg_date" class="col-sm-2 col-md-2 control-label">收文日期：</label>
+                    <div class="col-sm-10 col-md-10 input-inline">
+                        <input type="{% if chrome %}date{% else %}text{% endif %}" class="{% if not chrome %}vDateField{% endif %} form-control" id="reg-date" name="reg_date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="from_date" class="col-sm-2 col-md-2 control-label">日期范围：</label>
+                    <div class="col-sm-10 col-md-10 input-inline">
+                        <input type="{% if chrome %}date{% else %}text{% endif %}" class="{% if not chrome %}vDateField{% endif %} form-control" id="from-date" name="from_date">
+                        <span>&nbsp;到&nbsp;</span>
+                        <input type="{% if chrome %}date{% else %}text{% endif %}" class="{% if not chrome %}vDateField{% endif %} form-control" id="to-date" name="to_date">
+                        <input type="hidden" class="" value="{%now "Y-m-d"%}">
+{#                        <a id="last_week">过去一周</a><a id="last_month">最近一个月</a><a href="">今年</a>#}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reference" class="col-sm-2 col-md-2 control-label">文号：</label>
+                    <div class="col-sm-3 col-md-3">
+                        <input type="text" class="form-control" id="reference" name="reference" placeholder="">
+                    </div>
+                    <label for="issue" class="col-sm-1 col-md-1 control-label">单位：</label>
+                    <div class="col-sm-4 col-md-4">
+                        <input type="text" class="form-control" id="issue" name="issue" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="col-sm-2 col-md-2 control-label">文题：</label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" class="form-control" id="title" name="title" placeholder="">
+                    </div>
+                </div>
+                {% if not user.is_anonymous %}
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-md-offset-2 col-sm-10 col-md-10">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="related"> 与我相关的文件
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-md-offset-2 col-sm-10 col-md-10">
+                        <button type="reset" class="btn btn-default">清空查询条件</button>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-success btn-full">搜索</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="seearch-result"></div>
+{% endblock content %}
+{% block foot_script %}
+    <script src="{% static 'oa/js/search.js' %}"></script>
+    <script>
+        function getLastWeek(){
+            var today = new Date();
+            return new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+        }
+        function getLastMonth(){
+            var today = new Date();
+            return new Date(today.getFullYear(), today.getMonth()-1, today.getDate());
+        }
+        (function(){
+            var from = document.querySelector('#from-date');
+            var to   = document.querySelector('#to-date');
+            var currentTime = new Date();
+            var now = "{% now "Y-m-d"%}";
+            $("#last_week").click(function(){
+                from.value = getLastWeek().toLocaleDateString();
+                to.value = now;
+            });
+            $("#last_month").click(function(){
+                from.value = getLastMonth().toLocaleDateString();
+                to.value = now;
+            });
+        })();
+    </script>
+{% endblock foot_script %}

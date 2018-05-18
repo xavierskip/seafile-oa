@@ -1,0 +1,26 @@
+{% load seahub_tags office_extras%}
+<div class="panel panel-info">
+    <div class="panel-heading">
+        {% if count %}
+            <p class="panel-title">返回{{ count }}个结果</p>
+        {% else %}
+            <p class="panel-title">{{ tips }}</p>
+        {% endif %}
+        </div>
+    <div class="panel-body">
+        <div class="list-group" style="margin-bottom:0">
+            {% for d in docs %}
+                <p class="list-group-item onhover">
+                    <span>{{ d.registered }}</span>
+                    <span><a href="{% url 'office_page' d.id|antispider %}">{{ d }}</a></span>
+                    <span>{{ d.issue }}</span>
+                    <span class="hoveron"><a href="es:{{ d }}">open Everything</a></span>
+                </p>
+            {% empty %}
+                <p>空</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+

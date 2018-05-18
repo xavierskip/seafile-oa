@@ -1,0 +1,234 @@
+<style type="text/css">
+body {
+  font-family: helvetica;
+    background: #FFFFFF;
+}
+.explode {
+  background: #eaf3d2;
+}
+.explode #chrome  {
+  -o-transform: rotateX( 60deg ) rotateZ( 1deg  ) translateY( 300px ) scale(.8);
+  -moz-transform: rotateX( 60deg ) rotateZ( 1deg  ) translateY( 300px ) scale(.8); 
+  -webkit-transform: rotateX( 60deg ) rotateZ( 1deg  ) translateY( 300px ) scale(.8); 
+  transform: rotateX( 60deg ) rotateZ( 1deg  ) translateY( 300px ) scale(.8); 
+}
+.explode #shadow {
+  opacity: 1;
+}
+.explode #mask {
+  -o-transform: translateY(-600px);
+  -moz-transform: translateY(-600px);
+  -webkit-transform: translateY(-600px);
+  transform: translateY(-600px);
+  opacity: .7;
+}
+.explode #yellow { 
+  -o-transform: translateY(-0px);
+  -moz-transform: translateY(-0px);
+  -webkit-transform: translateY(-0px);
+  transform: translateY(-0px); 
+  box-shadow: 5px 30px 30px rgba(0,0,0,.3);
+}
+.explode #red { 
+  -o-transform: translateY(-50px) rotate(-120deg);
+  -moz-transform: translateY(-50px) rotate(-120deg);
+  -webkit-transform: translateY(-50px) rotate(-120deg);
+  transform: translateY(-50px) rotate(-120deg);
+  box-shadow: -40px -20px 30px rgba(0,0,0,.3);
+}
+.explode #green { 
+  -o-transform: translateY(-100px) rotate(-240deg);
+  -moz-transform: translateY(-100px) rotate(-240deg);
+  -webkit-transform: translateY(-100px) rotate(-240deg);
+  transform: translateY(-100px) rotate(-240deg); 
+  box-shadow: 40px -30px 30px rgba(0,0,0,.3);
+}
+.explode #green2 {
+  opacity: .7;
+  -o-transform: translateY( -120px ) translateX( -20px ); 
+  -moz-transform: translateY( -120px ) translateX( -20px ); 
+  -webkit-transform: translateY( -120px ) translateX( -20px ); 
+  transform: translateY( -120px ) translateX( -20px ); 
+  box-shadow: 10px 40px 30px rgba(0,0,0,.4);
+}
+
+* {
+  -o-transition: all 1s;
+  -moz-transition: all 1s;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+}
+#chrome {
+  perspective: 600px;
+  position: absolute;
+  left: 50%;
+  margin-left: -309px;
+  top: 20px;
+  width: 617px;
+  height: 617px;
+}
+#shadow {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  box-shadow: 0 0 50px 150px rgba(0,0,0,.1);
+  border-radius: 50%;
+  z-index: 20;
+}
+#shadow:after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -22.12% 0 0 -22.12%;
+  width: 44.24%;
+  height: 44.24%;
+  background: rgba(0,0,0,.1);
+  box-shadow: 0 0 50px rgba(0,0,0,.2);
+  border-radius: 50%;
+  z-index: 10;
+}
+#mask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  box-shadow:
+    2px 12px 30px rgba(0,0,0,.24),
+    0 0 0 200px white
+    ;
+  border-radius: 50%;
+  z-index: 20;
+}
+#mask:before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -22.12% 0 0 -22.12%;
+  width: 44.24%;
+  height: 44.24%;
+  background: #eef3f9;
+  border-radius: 50%;
+  z-index: 10;
+}
+#mask:after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -18.88% 0 0 -18.88%;
+  width: 37.76%;
+  height: 37.76%;
+  background: #1674a8;
+  background: -o-radial-gradient(center, ellipse cover, #90c0e4 0%,#0a72a7 100%);
+  background: -moz-radial-gradient(center, ellipse cover, #90c0e4 0%,#0a72a7 100%);
+  background: -webkit-radial-gradient(center, ellipse cover, #90c0e4 0%,#0a72a7 100%);
+  background: radial-gradient(center, ellipse cover, #90c0e4 0%,#0a72a7 100%);
+  background-position: 50% 100%;
+  background-size: 180%;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  z-index: 11;
+}
+#red,
+#yellow,
+#green {
+  position: absolute;
+  width: 55%;
+  height: 80.9%;
+}
+#red:after,
+#yellow:after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 85px solid rgba(0,0,0,.03);
+  border-right: 331px solid transparent;
+}
+#yellow {
+  top: 173px;
+  left: 287px;
+  background-color: #fcd808;
+  background: -o-radial-gradient(left top, ellipse cover, #fdd901 60%,#e2b22a 70%);
+  background: -moz-radial-gradient(left top, ellipse cover, #fdd901 60%,#e2b22a 70%);
+  background: -webkit-radial-gradient(left top, ellipse cover, #fdd901 60%,#e2b22a 70%);
+  background: radial-gradient(left top, ellipse cover, #fdd901 60%,#e2b22a 70%);
+}
+#red {
+  -o-transform: rotate(-120deg);
+  -moz-transform: rotate(-120deg);
+  -webkit-transform: rotate(-120deg);
+  transform: rotate(-120deg);
+  top: -123px;
+  left: 170px;
+  background: #e93c35; 
+  background: -o-radial-gradient(100% 50%, ellipse cover, #f48268 0%,#eb3831 60%);
+  background: -moz-radial-gradient(100% 50%, ellipse cover, #f48268 0%,#eb3831 60%);
+  background: -webkit-radial-gradient(100% 50%, ellipse cover, #f48268 0%,#eb3831 60%);
+  background: radial-gradient(100% 50%, ellipse cover, #f48268 0%,#eb3831 60%);
+}
+#green {
+  -o-transform: rotate(-240deg);
+  -moz-transform: rotate(-240deg);
+  -webkit-transform: rotate(-240deg);
+  transform: rotate(-240deg);
+  top: 124px;
+  left: -27px;
+  background: #5bc15b;
+  background: -o-radial-gradient(left top, ellipse cover, #57c35d 62%,#429e51 75%);
+  background: -moz-radial-gradient(left top, ellipse cover, #57c35d 62%,#429e51 75%);
+  background: -webkit-radial-gradient(left top, ellipse cover, #57c35d 62%,#429e51 75%);
+  background: radial-gradient(left top, ellipse cover, #57c35d 62%,#429e51 75%);
+}
+#green2 {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 287px;
+  width: 135px;
+  height: 233px;
+  width: 0;
+  height: 0;
+  border-top: 233px solid #5bc15b;
+  border-right: 135px solid transparent;
+  z-index: 9;
+}
+#green2:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  z-index: 10;
+  border-top: 260px solid rgba(0,0,0,.04);
+  border-right: 75px solid transparent;
+  -o-transform: translate(29px,15px) rotate(14deg); 
+  -moz-transform: translate(29px,15px) rotate(14deg); 
+  -webkit-transform: translate(29px,15px) rotate(14deg); 
+  transform: translate(29px,15px) rotate(14deg);
+}
+</style>
+
+
+<div id="chrome">
+  <div id="mask"></div>
+  <div id="shadow"></div>
+  <div id="green"></div>
+  <div id="red"></div>
+  <div id="yellow"></div>
+  <div id="green2"></div>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+        $('body').click(function(){
+            $(this).toggleClass('explode');
+        });
+    });
+</script>

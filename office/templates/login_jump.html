@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<p>请登陆！<i>5</i>秒后转跳到登陆页面，如果没有自动转跳，请手动点击链接<a href="{{ url }}"><b>登陆</b></a></p>
+<script>
+    function countdown(){
+        i=document.querySelector('i');
+        n = parseInt(i.innerText)-1;
+        if(n>=0){
+            i.innerText = n;
+        }
+    }
+    setTimeout(function () {
+        window.location.href="{{ url }}";
+    }, 5000);
+    setInterval(countdown, 1000);
+</script>
+</body>
+</html>

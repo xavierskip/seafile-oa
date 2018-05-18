@@ -1,0 +1,64 @@
+{% load office_extras%}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>多个打印</title>
+    {#<link type="text/css" rel="stylesheet" href="css/print.css" media="print">#}
+    <style>
+        #printbutton{
+            cursor: pointer;
+            position: fixed;
+            top:0; right:0;
+            color: #ffffff; background-color: #002a80;
+            padding: 7px;
+        }
+        .key{
+            color: #555;
+            text-decoration: none;
+            text-align: center;
+            margin: 3px;
+            padding: 3px;
+            background: #eff0f2;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            border-top: 1px solid #f5f5f5;
+            -webkit-box-shadow:
+                inset 0 0 25px #e8e8e8,
+                0 1px 0 #c3c3c3,
+                0 2px 0 #c9c9c9,
+                0 2px 3px #333;
+            -moz-box-shadow:
+                inset 0 0 25px #e8e8e8,
+                0 1px 0 #c3c3c3,
+                0 2px 0 #c9c9c9,
+                0 2px 3px #333;
+            box-shadow:
+                inset 0 0 25px #e8e8e8,
+                0 1px 0 #c3c3c3,
+                0 2px 0 #c9c9c9,
+                0 2px 3px #333;
+            text-shadow: 0px 1px 0px #f5f5f5;
+        }
+        /* 样式将只应用于打印 */
+        @media print {
+            #printbutton{
+                display:none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="printbutton">按 <span class="key">ctrl</span>+<span class="key"> p </span>键进行打印</div>
+{% for id in ids %}
+    <iframe name="iFrame{{ id }}" frameborder="0" scrolling="no" width="100%" src="{% url 'print_form' id|antispider %}" onload="this.height=iFrame{{ id }}.document.body.scrollHeight"></iframe>
+    <div style="page-break-after:always;"></div>
+{% endfor %}
+<script>
+    var pb = document.querySelector("#printbutton");
+    pb.onclick = function () {
+        window.print();
+    }
+</script>
+</body>
+</html>

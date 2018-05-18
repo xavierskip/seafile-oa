@@ -1,0 +1,17 @@
+{% extends "doc_base.html" %}
+{% load office_extras avatar_tags%}
+{% block commit_form %}
+    <div id="post_form" class="square opacity" >
+        <strong>{{ user.nickname }}, 请回复： </strong>
+        <div contenteditable="true" id="inputor" class="editable-inputor at-inputor"></div>
+        {% url 'office_assign' doc.id|antispider as cu %}
+        <form method="post" action="{{ cu }}" class="update-form" onsubmit="return copyContent(this)">
+            {% csrf_token %}
+            <p class="hide">
+                <label for="commit">{{ user.username }}:</label>
+                <textarea name="commit" id="commit"></textarea>
+            </p>
+            <input type="submit" value="提交" class="btn btn-success btn-full">
+        </form>
+    </div>
+{% endblock commit_form %}

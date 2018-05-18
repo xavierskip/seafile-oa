@@ -1,0 +1,29 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_static admin_modify %}
+{% load admin_urls %}
+{% block extrastyle %}{{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "oa/css/my_admin.css" %}" />
+{% endblock %}
+{#{% block after_field_sets %}{{ block.super }}#}
+{#    <input class="hide" name="uuid_folder" value="{{ uuid_folder }}" type="text">#}
+{#{% endblock %}#}
+{% block extrahead %}{{ block.super }}
+    {# JavaScript for upload files #}
+    {# order is import https://github.com/blueimp/jQuery-File-Upload/blob/7d46990486ff08acfc001b6368b09bce6712c2c2/index.html #}
+    <script src="{% static 'oa/js/jquery.min.js' %}"></script>
+    <script src="{% static 'scripts/lib/jquery.ui.widget.1.11.1.js' %}"></script>
+    <script src="{% static 'scripts/lib/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'scripts/lib/jquery.fileupload.js' %}"></script>
+    <script src="{% static 'scripts/lib/jquery.fileupload-process.js' %}"></script>
+    <script src="{% static 'scripts/lib/jquery.fileupload-validate.js' %}"></script>
+    <script src="{% static 'scripts/lib/jquery.fileupload-ui.js' %}"></script>
+{% endblock %}
+{% block content %}{{ block.super }}
+    {# for file upload #}
+    <input id="fileupload" type="file" name="file" class="hide" data-uuid="{{ uuid_folder }}" multiple >
+    <div id="upload-file-dialog" style="display: none;">
+        <div class="progress-bar progress-bar-success"></div>
+        <p class="info"></p>
+    </div>
+    <script src="{% static 'oa/js/admin_help.js' %}"></script>
+{% endblock %}

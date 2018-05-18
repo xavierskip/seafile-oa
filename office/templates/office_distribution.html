@@ -1,0 +1,8 @@
+{% extends "office_base.html" %}
+{% block title %}分发文件{% endblock title %}
+{% block panel %}
+    {% if distributed %}未分发文件{% else %}已分发文件{% endif %}
+{% endblock panel %}
+{% block sign-css %}
+    {% if distributed %}wait-block{% else %}sucess-block{% endif %}
+{% endblock %}

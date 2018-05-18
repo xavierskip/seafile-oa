@@ -1,0 +1,8 @@
+{% extends "office_base.html" %}
+{% block title %}我的文件{% endblock title %}
+{% block panel %}
+    {% if todo %}未完成文件{% else %}已完成文件{% endif %}
+{% endblock panel %}
+{% block sign-css %}
+    {% if todo %}duty-block{% else %}keep-block{% endif %}
+{% endblock %}
